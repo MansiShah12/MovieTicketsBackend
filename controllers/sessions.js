@@ -1,30 +1,31 @@
 import User from '../models/user';
 import Session from '../models/session'
 import tokengen from '../helpers/userHelper'
-export default function login(req, res, next) {
-    console.log("reueststststststsst", req)
+export   function login(req, res, next) {
+    var email = req.body.email
     User.findOne(req.body)
-    .then((response) =>{console.log("usrerererererer", response) 
+    .then(async(response) =>{
+    //console.log("usrerererererer1111111111111", response) 
     if(response==null)
         res.json({message: " Login failed"})
     else{
-        var token = tokengen();
-        console.log("token isisisisis", token)
-        res.json({message: " Login successfull", access_token : token})}
-
-        var sessionData = {
-            email : req.body.email,
-            token : token
-        }
-        var session = new Session(sessionData)
-        session.save()
-        .then((res) => 
-        console.log("responseeeeeee", res)
-        //res.json({message: " Session Saved Successfull"})
-        )
-        .catch(err => next(err));
-
+         var token = await tokengen(email);
+        res.json({message: " Login Successfull",email : email, access_token : token, status : 200 })
     }
-    )
-        .catch(err => next(err));
+    }).catch(err => next(err));
+}
+
+export function logout(req, res, next) {
+    var email = req.body.email
+    Session.findOneAndDelete({email:email})
+    .then((response) =>{
+        //console.log("usrerererererer", response) 
+        if(response)
+            res.json({message: "User Logged out successfully", status : 200});
+        else{
+            res.json({message: "Already Logged out"})
+        }
+    }).catch(err => {
+        next(err);
+    });
 }

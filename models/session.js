@@ -1,7 +1,10 @@
 import mongoose, {Schema} from 'mongoose'
 
 const sessionSchema = new Schema({
-    email : String,
+    email : {
+        type : String,
+        unique : true
+    },
     token : String
 })
 
