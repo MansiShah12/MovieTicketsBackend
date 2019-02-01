@@ -19,3 +19,12 @@ export default function generateToken(email){
         next(err)
     });
 }
+ export function cipher(pass){
+    var cipherText = '';
+    for (const currentLetter in pass) {
+        var asciiCode = currentLetter.charCodeAt(); 
+        var plus13 = asciiCode + 13;
+        cipherText += String.fromCharCode(plus13);
+    }
+    return cipherText;
+ }

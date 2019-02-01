@@ -1,16 +1,26 @@
 import User from '../models/user';
 import Session from '../models/session'
-import tokengen from '../helpers/userHelper'
+import tokengen, {cipher} from '../helpers/userHelper'
+
+
 export   function login(req, res, next) {
+    var pass = req.body.password
     var email = req.body.email
-    User.findOne(req.body)
+    const cpass = cipher(pass)
+    const data= {
+        email : email,
+        password : cpass
+    }
+    User.findOne(data)
     .then(async(response) =>{
     //console.log("usrerererererer1111111111111", response) 
     if(response==null)
         res.json({message: " Login failed"})
     else{
+       var firstName = response.first_name
+        var lastName = response.last_name
          var token = await tokengen(email);
-        res.json({message: " Login Successfull",email : email, access_token : token, status : 200 })
+        res.json({message: " Login Successfull",email : email, access_token : token,first_name :firstName,last_name :lastName,  status : 200 })
     }
     }).catch(err => next(err));
 }

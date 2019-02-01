@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { index } from './controllers/movies';
-import user from './controllers/users'
+import user, {updateUser} from './controllers/users'
 import { logout, login} from './controllers/sessions'
 
 // Initialize the router
@@ -11,5 +11,7 @@ router.route('/movies.json').get(index);
 router.route('/register.json').post(user);
 router.route('/login.json').post(login);
 router.route('/logout.json').delete(logout);
+router.route('/updateUser.json').put(updateUser)
+
 
 export default router;
